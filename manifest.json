@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "SEO & OGP Inspector Pro",
+  "version": "1.0.0",
+  "description": "開いているページのSEOメタデータとOGP情報をワンクリックで抽出するクリーンで高速なツール。",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SEOメタ情報を確認",
+    "default_icon": "icon_128.png"
+  },
+  "icons": {
+    "128": "icon_128.png"
+  }
+}

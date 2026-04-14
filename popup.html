@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>SEO Meta Inspector</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="header">
+    <div class="logo-area">
+      <div class="icon">🔍</div>
+      <h1>SEO Inspector</h1>
+    </div>
+    <div class="status-badge">有効</div>
+  </div>
+
+  <div class="url-bar">
+    <span class="url-icon">🔗</span>
+    <input type="text" id="page-url" readonly>
+    <button id="copy-url" title="URLをコピー">📋</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-target="tab-general">概要</button>
+    <button class="tab-btn" data-target="tab-headings">見出し</button>
+    <button class="tab-btn" data-target="tab-images">画像 <span id="img-badge" class="badge"></span></button>
+    <button class="tab-btn" data-target="tab-links">リンク</button>
+    <button class="tab-btn" data-target="tab-social">SNS (OGP)</button>
+  </div>
+
+  <div class="tab-content active" id="tab-general">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">🏷️</span>
+        <h2>タイトル</h2>
+        <span class="char-count" id="title-count">0/60</span>
+      </div>
+      <div class="card-body">
+        <p id="meta-title" class="data-text loading">解析中...</p>
+        <div class="progress-bar"><div class="progress" id="title-progress"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <h2>ディスクリプション</h2>
+        <span class="char-count" id="desc-count">0/120</span>
+      </div>
+      <div class="card-body">
+        <p id="meta-desc" class="data-text loading">解析中...</p>
+        <div class="progress-bar"><div class="progress" id="desc-progress"></div></div>
+      </div>
+    </div>
+
+    <!-- Technical Data -->
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>テクニカル <span style="font-weight:normal;color:#9ca3af;font-size:11px;">(Robots / Canonical)</span></h2>
+      </div>
+      <div class="card-body padding-small" style="padding:12px 16px;">
+        <div style="margin-bottom: 8px;">
+          <strong style="font-size:11px;color:var(--text-tertiary);">Canonical URL:</strong><br>
+          <span id="meta-canonical" class="data-text" style="font-size:12px;word-break:break-all;">解析中...</span>
+        </div>
+        <div>
+          <strong style="font-size:11px;color:var(--text-tertiary);">Meta Robots:</strong><br>
+          <span id="meta-robots" class="data-text" style="font-size:12px;">解析中...</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Tools -->
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>クイックツール</h2>
+      </div>
+      <div class="card-body padding-small" style="display:flex;gap:8px;padding:12px 16px;">
+        <a id="link-robots-txt" href="#" target="_blank" class="tool-btn">robots.txt</a>
+        <a id="link-sitemap-xml" href="#" target="_blank" class="tool-btn">sitemap.xml</a>
+      </div>
+    </div>
+    
+    <!-- Affiliate CTA -->
+    <a href="https://www.conoha.jp/wing/" target="_blank" class="affiliate-cta" title="国内最速レンタルサーバー ConoHa WING">
+      <div class="cta-content">
+        <span class="cta-badge">SPONSORED</span>
+        <h3>WordPressが重いと感じたら？</h3>
+        <p>国内最速No.1「ConoHa WING」で表示速度を改善し、SEOスコアを向上させましょう。</p>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="tab-content" id="tab-headings">
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>見出し構造 (H1 - H6)</h2>
+      </div>
+      <div class="card-body padding-small">
+        <ul id="headings-list" class="tree-list">
+          <li class="loading" style="padding: 16px;">解析中...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-images">
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>ALT属性がない画像</h2>
+      </div>
+      <div class="card-body padding-small">
+        <ul id="images-list" class="warning-list">
+          <li class="loading" style="padding: 16px;">画像解析中...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-links">
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>リンクサマリー</h2>
+      </div>
+      <div class="card-body padding-small">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-label">総リンク数</span>
+            <span class="stat-value" id="links-total">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">内部リンク</span>
+            <span class="stat-value" id="links-internal">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">外部リンク</span>
+            <span class="stat-value" id="links-external">0</span>
+          </div>
+        </div>
+        <div style="padding: 12px 16px; border-top: 1px solid var(--border-color);">
+          <strong style="font-size:11px;color:var(--danger-color);">Title属性なし:</strong>
+          <span id="links-missing-title" style="font-size:13px; font-weight:600; margin-left: 8px;">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-social">
+    <div class="card">
+      <div class="card-header border-bottom">
+        <h2>OGPプレビュー</h2>
+      </div>
+      <div class="card-body">
+        <div class="og-preview">
+          <div class="og-image-container">
+            <img id="og-image" src="" alt="OGP Preview" style="display:none;">
+            <div id="og-image-placeholder">画像がありません</div>
+          </div>
+          <div class="og-details">
+            <h3 id="og-title">解析中...</h3>
+            <p id="og-desc">解析中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
